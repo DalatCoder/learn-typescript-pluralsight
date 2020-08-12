@@ -5,6 +5,7 @@ function startGame() {
   logPlayer(playerName);
 
   postScore(100, playerName);
+  postScore(-5, playerName);
 }
 
 function logPlayer(name: string = 'MultiMath Player'): void {
@@ -27,11 +28,28 @@ function postScore(
   score: number,
   playerName: string = 'MultiMath Player'
 ): void {
+  let logger: (value: string) => void;
+  // Logger can take any function that receive 1 argument typed string and return void
+
+  if (score < 0) {
+    logger = logError;
+  } else {
+    logger = logMessage;
+  }
+
   const scoreElement: HTMLElement | null = document.getElementById(
     'postedScores'
   );
 
   scoreElement!.innerText = `${score} - ${playerName}`;
+
+  logger(`Score: ${score}`);
 }
 
 document.getElementById('startGame')!.addEventListener('click', startGame);
+
+const logMessage = (message: string): void => console.log(message);
+
+function logError(err: string): void {
+  console.error(err);
+}
